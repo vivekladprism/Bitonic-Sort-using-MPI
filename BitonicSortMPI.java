@@ -9,7 +9,8 @@ public class BitonicSortMPI
 	{
 		MPI.Init(args);
 	    int rank = MPI.COMM_WORLD.Rank();
-	    int N = 64;
+	    
+	    int N = 1024;
 	    int p = MPI.COMM_WORLD.Size();
 	    
 	    Object arr[] = new Object[N];
@@ -24,6 +25,8 @@ public class BitonicSortMPI
 	    int processorDataSize = arr.length/(2 * p);
 	    DataPoint d1[] = new DataPoint[processorDataSize];
 	    DataPoint d2[] = new DataPoint[processorDataSize];
+
+	    long startTime = System.currentTimeMillis();
 	    
 	    for(int i = 0 ; i < times; i++)
 	    {	    	
@@ -40,7 +43,6 @@ public class BitonicSortMPI
 	    			MPI.COMM_WORLD.Send(data1, j * processorDataSize, processorDataSize, MPI.OBJECT, j + 1, tag);
 		    		MPI.COMM_WORLD.Send(data2, j * processorDataSize, processorDataSize, MPI.OBJECT, j + 1, tag+1);
 	    		}
-	    		
 	    	}
 	    	if(rank != 0)
 		    {
@@ -72,10 +74,15 @@ public class BitonicSortMPI
 	    }
 	    if(rank == 0)
 	    {
+	    	System.out.println();
+	    	long endTime = System.currentTimeMillis();
+	    	System.out.println("Total time taken = " + (endTime - startTime));
+	    	System.out.println();
 	    	System.out.println("The final Sorted Array is = ");
 	    	System.out.println(Arrays.toString(arr));
-	    }
 	    	
+	    }
+	    
 	    MPI.Finalize();
 	}
 	
